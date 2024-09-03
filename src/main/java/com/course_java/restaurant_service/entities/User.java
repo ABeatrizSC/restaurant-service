@@ -1,11 +1,17 @@
 package com.course_java.restaurant_service.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 //serializable = permite enviar objetos pela rede, como em uma chamada de metodo remoto (RMI) ou através de APIs RESTful.
+@Entity //anotations para o JPA
+@Table(name = "tb_user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id //anotations para o JPA, qual é a chave primária
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
