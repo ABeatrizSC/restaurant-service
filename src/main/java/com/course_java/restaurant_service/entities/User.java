@@ -1,8 +1,11 @@
 package com.course_java.restaurant_service.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 //serializable = permite enviar objetos pela rede, como em uma chamada de metodo remoto (RMI) ou através de APIs RESTful.
 @Entity //anotations para o JPA
@@ -17,6 +20,10 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String password;
+
+    @JsonIgnore //evitar o looping infinito, pois pedido tem cliente e cliente tem pedido
+    @OneToMany(mappedBy = "client") //um cliente tem vários pedidos
+    private List<Order> orders = new ArrayList<>();
 
     public User() {
     }
@@ -68,6 +75,10 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
     @Override
