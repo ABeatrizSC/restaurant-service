@@ -1,14 +1,8 @@
 package com.course_java.restaurant_service.config;
 
-import com.course_java.restaurant_service.entities.Category;
-import com.course_java.restaurant_service.entities.Order;
-import com.course_java.restaurant_service.entities.Product;
-import com.course_java.restaurant_service.entities.User;
+import com.course_java.restaurant_service.entities.*;
 import com.course_java.restaurant_service.entities.enums.OrderStatus;
-import com.course_java.restaurant_service.repositories.CategoryRepository;
-import com.course_java.restaurant_service.repositories.OrderRepository;
-import com.course_java.restaurant_service.repositories.ProductRepository;
-import com.course_java.restaurant_service.repositories.UserRepository;
+import com.course_java.restaurant_service.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -34,39 +28,49 @@ public class TestConfig implements CommandLineRunner { //CommandLineRunner = int
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     @Override
     public void run(String... args) throws Exception {
         Category cat1 = new Category(null, "Electronics");
         Category cat2 = new Category(null, "Books");
         Category cat3 = new Category(null, "Computers");
 
-        Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
-        Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
-        Product p3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
-        Product p4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, "");
-        Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
+        Product produto1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
+        Product produto2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
+        Product produto3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
+        Product produto4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, "");
+        Product produto5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
 
         categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
-        productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+        productRepository.saveAll(Arrays.asList(produto1, produto2, produto3, produto4, produto5));
 
         //Relação de objetos - adicionado categorias a um produto
-        p1.getCategories().add(cat2);
-        p2.getCategories().add(cat1);
-        p2.getCategories().add(cat3);
-        p3.getCategories().add(cat3);
-        p4.getCategories().add(cat3);
-        p5.getCategories().add(cat2);
+        produto1.getCategories().add(cat2);
+        produto2.getCategories().add(cat1);
+        produto2.getCategories().add(cat3);
+        produto3.getCategories().add(cat3);
+        produto4.getCategories().add(cat3);
+        produto5.getCategories().add(cat2);
 
-        productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+        productRepository.saveAll(Arrays.asList(produto1, produto2, produto3, produto4, produto5));
 
-        User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456");
-        User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
+        User usuario1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", "123456");
+        User usuario2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
 
-        Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1);
-        Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, u2);
-        Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.CANCELED, u1);
+        Order order1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, usuario1);
+        Order order2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT, usuario2);
+        Order order3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.CANCELED, usuario1);
 
-        userRepository.saveAll(Arrays.asList(u1, u2));
-        orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+        userRepository.saveAll(Arrays.asList(usuario1, usuario2));
+        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
+
+        OrderItem orderItem1 = new OrderItem(order1, produto1, 2, produto1.getPrice());
+        OrderItem orderItem2 = new OrderItem(order1, produto3, 1, produto3.getPrice());
+        OrderItem orderItem3 = new OrderItem(order2, produto3, 2, produto3.getPrice());
+        OrderItem orderItem4 = new OrderItem(order3, produto5, 2, produto5.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
     }
 }
