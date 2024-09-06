@@ -2,6 +2,7 @@ package com.course_java.restaurant_service.services;
 
 import com.course_java.restaurant_service.entities.User;
 import com.course_java.restaurant_service.repositories.UserRepository;
+import com.course_java.restaurant_service.resources.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> obj = userRepository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User insert(User obj) {
@@ -32,11 +33,12 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = userRepository.getReferenceById(id);
-        updateData(entity, obj);
-        return userRepository.save(entity);
+        User entity = userRepository.getReferenceById(id); //monitora o objeto do id - depois é efetuado a operação no BD (findById a operacao é feito direto)
+        updateData(entity, obj); //atualizar os dados do entitiy baseado nos que chegaram no obj
+        return userRepository.save(entity); //salva
     }
 
+    //campos que poderão ser atualizados
     private void updateData(User entity, User obj) {
         entity.setName(obj.getName());
         entity.setEmail(obj.getEmail());
